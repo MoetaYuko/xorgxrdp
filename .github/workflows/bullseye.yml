@@ -1,0 +1,49 @@
+name: Build bullseye
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+    container: debian:bullseye
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      DPKG_COLORS: always
+      FORCE_UNSAFE_CONFIGURE: 1
+    steps:
+      - name: Install Dependencies
+        run: |
+          echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/00noconfirm
+          apt-get update && \
+            apt-get install -yq build-essential fakeroot devscripts git-buildpackage
+
+      - uses: actions/checkout@v3
+        with:
+          repository: MoetaYuko/xrdp
+          path: xrdp_src
+
+      - uses: actions/checkout@v3
+        with:
+          path: xorgxrdp_src
+
+      - run: apt-get build-dep -yq ./xrdp_src
+
+      - name: Build install xrdp
+        working-directory: xrdp_src
+        run: |
+          git-deborig HEAD
+          dpkg-buildpackage
+          debi --with-depends
+
+      - run: apt-get build-dep -yq ./xorgxrdp_src
+
+      - name: Build
+        working-directory: xorgxrdp_src
+        run: |
+          git-deborig HEAD
+          dpkg-buildpackage
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: '**/*.deb'
