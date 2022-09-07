@@ -14,7 +14,7 @@ Reviewed-by: Dominik George <nik@naturalnet.de>
  AC_C_CONST
  AC_PROG_LIBTOOL
  
-@@ -94,5 +96,6 @@
+@@ -99,5 +101,6 @@
                   xrdpmouse/Makefile
  ])
  
