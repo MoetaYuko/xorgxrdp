@@ -7,10 +7,10 @@ on:
         description: Branch
         required: true
         default: master
-        type: choice
-        options:
-        - master
-        - nvidia
+      xrdp_branch:
+        description: Xrdp Branch
+        required: true
+        default: master
 
 jobs:
   build-deb:
@@ -31,6 +31,7 @@ jobs:
         with:
           repository: MoetaYuko/xrdp
           path: xrdp_src
+          ref: ${{ github.event.inputs.xrdp_branch }}
 
       - uses: actions/checkout@v3
         with:
