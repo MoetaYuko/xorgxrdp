@@ -99,6 +99,9 @@ host_triplet = @host@
 @WITH_GLAMOR_TRUE@am__append_8 = rdpEgl.c
 @WITH_GLAMOR_TRUE@am__append_9 = rdpEgl.h
 @WITH_GLAMOR_TRUE@am__append_10 = -lepoxy
+@WITH_LRANDR_TRUE@am__append_11 = -DXORGXRDP_LRANDR
+@WITH_LRANDR_TRUE@am__append_12 = rdpLRandR.c
+@WITH_LRANDR_TRUE@am__append_13 = rdpLRandR.h
 subdir = module
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_append_compile_flags.m4 \
@@ -161,9 +164,10 @@ am__libxorgxrdp_la_SOURCES_DIST = rdpDraw.c rdpPri.c rdpGC.c \
 	rdpCursor.c rdpMain.c rdpRandR.c rdpMisc.c rdpReg.c \
 	rdpComposite.c rdpGlyphs.c rdpPixmap.c rdpInput.c \
 	rdpClientCon.c rdpCapture.c rdpTrapezoids.c rdpTriangles.c \
-	rdpCompositeRects.c rdpXv.c rdpSimd.c rdpEgl.c
+	rdpCompositeRects.c rdpXv.c rdpSimd.c rdpEgl.c rdpLRandR.c
 @WITH_GLAMOR_TRUE@am__objects_1 = rdpEgl.lo
-am__objects_2 = $(am__objects_1)
+@WITH_LRANDR_TRUE@am__objects_2 = rdpLRandR.lo
+am__objects_3 = $(am__objects_1) $(am__objects_2)
 am_libxorgxrdp_la_OBJECTS = rdpDraw.lo rdpPri.lo rdpGC.lo \
 	rdpFillSpans.lo rdpSetSpans.lo rdpPutImage.lo rdpCopyArea.lo \
 	rdpCopyPlane.lo rdpPolyPoint.lo rdpPolylines.lo \
@@ -175,7 +179,7 @@ am_libxorgxrdp_la_OBJECTS = rdpDraw.lo rdpPri.lo rdpGC.lo \
 	rdpMisc.lo rdpReg.lo rdpComposite.lo rdpGlyphs.lo rdpPixmap.lo \
 	rdpInput.lo rdpClientCon.lo rdpCapture.lo rdpTrapezoids.lo \
 	rdpTriangles.lo rdpCompositeRects.lo rdpXv.lo rdpSimd.lo \
-	$(am__objects_2)
+	$(am__objects_3)
 libxorgxrdp_la_OBJECTS = $(am_libxorgxrdp_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -209,10 +213,10 @@ am__depfiles_remade = ./$(DEPDIR)/rdpCapture.Plo \
 	./$(DEPDIR)/rdpGC.Plo ./$(DEPDIR)/rdpGlyphs.Plo \
 	./$(DEPDIR)/rdpImageGlyphBlt.Plo \
 	./$(DEPDIR)/rdpImageText16.Plo ./$(DEPDIR)/rdpImageText8.Plo \
-	./$(DEPDIR)/rdpInput.Plo ./$(DEPDIR)/rdpMain.Plo \
-	./$(DEPDIR)/rdpMisc.Plo ./$(DEPDIR)/rdpPixmap.Plo \
-	./$(DEPDIR)/rdpPolyArc.Plo ./$(DEPDIR)/rdpPolyFillArc.Plo \
-	./$(DEPDIR)/rdpPolyFillRect.Plo \
+	./$(DEPDIR)/rdpInput.Plo ./$(DEPDIR)/rdpLRandR.Plo \
+	./$(DEPDIR)/rdpMain.Plo ./$(DEPDIR)/rdpMisc.Plo \
+	./$(DEPDIR)/rdpPixmap.Plo ./$(DEPDIR)/rdpPolyArc.Plo \
+	./$(DEPDIR)/rdpPolyFillArc.Plo ./$(DEPDIR)/rdpPolyFillRect.Plo \
 	./$(DEPDIR)/rdpPolyGlyphBlt.Plo ./$(DEPDIR)/rdpPolyPoint.Plo \
 	./$(DEPDIR)/rdpPolyRectangle.Plo \
 	./$(DEPDIR)/rdpPolySegment.Plo ./$(DEPDIR)/rdpPolyText16.Plo \
@@ -266,7 +270,8 @@ am__noinst_HEADERS_DIST = rdpCapture.h rdpClientCon.h rdpComposite.h \
 	rdpPolyText16.h rdpPolyText8.h rdpPri.h rdpPushPixels.h \
 	rdpPutImage.h rdpRandR.h rdpReg.h rdpSetSpans.h rdpSimd.h \
 	rdpTrapezoids.h rdpTriangles.h rdpCompositeRects.h rdpXv.h \
-	amd64/funcs_amd64.h x86/funcs_x86.h rdpEgl.h
+	amd64/funcs_amd64.h x86/funcs_x86.h wyhash.h rdpEgl.h \
+	rdpLRandR.h
 HEADERS = $(noinst_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -462,9 +467,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = common.asm nasm_lt.sh
-EXTRA_FLAGS = $(am__append_1) $(am__append_4) $(am__append_7)
-EXTRA_SOURCES = $(am__append_8)
-EXTRA_HEADERS = $(am__append_9)
+EXTRA_FLAGS = $(am__append_1) $(am__append_4) $(am__append_7) \
+	$(am__append_11)
+EXTRA_SOURCES = $(am__append_8) $(am__append_12)
+EXTRA_HEADERS = $(am__append_9) $(am__append_13)
 SUBDIRS = $(am__append_2) $(am__append_5)
 ASMLIB = $(am__append_3) $(am__append_6)
 EGLLIB = $(am__append_10)
@@ -520,6 +526,7 @@ noinst_HEADERS = \
   rdpXv.h \
   amd64/funcs_amd64.h \
   x86/funcs_x86.h \
+  wyhash.h \
   $(EXTRA_HEADERS)
 
 libxorgxrdp_la_LTLIBRARIES = libxorgxrdp.la
@@ -631,6 +638,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpImageText16.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpImageText8.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpInput.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpLRandR.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpMain.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpMisc.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdpPixmap.Plo@am__quote@ # am--include-marker
@@ -905,6 +913,7 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/rdpImageText16.Plo
 	-rm -f ./$(DEPDIR)/rdpImageText8.Plo
 	-rm -f ./$(DEPDIR)/rdpInput.Plo
+	-rm -f ./$(DEPDIR)/rdpLRandR.Plo
 	-rm -f ./$(DEPDIR)/rdpMain.Plo
 	-rm -f ./$(DEPDIR)/rdpMisc.Plo
 	-rm -f ./$(DEPDIR)/rdpPixmap.Plo
@@ -990,6 +999,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/rdpImageText16.Plo
 	-rm -f ./$(DEPDIR)/rdpImageText8.Plo
 	-rm -f ./$(DEPDIR)/rdpInput.Plo
+	-rm -f ./$(DEPDIR)/rdpLRandR.Plo
 	-rm -f ./$(DEPDIR)/rdpMain.Plo
 	-rm -f ./$(DEPDIR)/rdpMisc.Plo
 	-rm -f ./$(DEPDIR)/rdpPixmap.Plo
